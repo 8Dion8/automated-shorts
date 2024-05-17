@@ -35,7 +35,9 @@ class RedditHandler:
                 posts = self.app.subreddit(self.subreddit).hot(limit=self.numPostsToScrape)
                 
         for post in posts:
-            scrapedObj = {}
+            scrapedObj = {
+                'id': post.id
+            }
             if 'title' in self.contentToScrape:
                 scrapedObj['title'] = post.title
                 

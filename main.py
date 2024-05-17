@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from utils.reddit import RedditHandler
 from utils.speech import SpeechHandler
 from utils.transcription import TranscriptionHandler
+from utils.producer import Producer
 
 if __name__ == '__main__':
     load_dotenv()
@@ -14,22 +15,22 @@ if __name__ == '__main__':
     config = configparser.ConfigParser()
     config.read('config.ini')
     
-    transcriptionHandler = TranscriptionHandler(config)
-    
-    transcriptionHandler.init_model()
-    transcriptionHandler.transcribe_audio("media/cjbc4s_title.wav")
-    
-    '''
-
     redditHandler = RedditHandler(config, redditClientID, redditClientSecret, redditUserAgent)
     
     redditHandler.authenticateAPI()
     scraped = redditHandler.scrapeSubreddit()
     print(scraped)
     
+    transcriptionHandler = TranscriptionHandler(config)
+    transcriptionHandler.init_model()
     
-
+    segments = transcriptionHandler.transcribe_audio(f'media/{scraped[0]["id"]}_title.wav')
     
+    producer = Producer(config)
+    producer.make_short(scraped[0]['id'], segments)
+    
+    
+    '''
     speechHandler = SpeechHandler(config, os.getenv('ELEVENLABSTOKEN'))
     speechHandler.init_client()
     
@@ -44,5 +45,6 @@ if __name__ == '__main__':
             post['id'] + '_topcomment',
             1
         )
-        
     '''
+        
+    

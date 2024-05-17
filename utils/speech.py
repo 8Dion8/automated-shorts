@@ -23,6 +23,6 @@ class SpeechHandler():
             voice = self.voices[voiceNum],
             model = self.model
         )
-        pathToAudio = os.path.join(self.savePath, fileID + '.mp4')
+        pathToAudio = os.path.join(self.savePath, fileID + '.wav')
         save(audio, pathToAudio)
         return pathToAudio

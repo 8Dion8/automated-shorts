@@ -18,11 +18,15 @@ class SpeechHandler():
         self.client = ElevenLabs(api_key = self.APIKey)
         
     def generate_speech(self, text: str, fileID: str, voiceNum: int) -> str:
-        audio = self.client.generate(
-            text = text,
-            voice = self.voices[voiceNum],
-            model = self.model
-        )
         pathToAudio = os.path.join(self.savePath, fileID + '.wav')
-        save(audio, pathToAudio)
-        return pathToAudio
+        if os.path.exists(pathToAudio):
+            return pathToAudio
+        else:
+            audio = self.client.generate(
+                text = text,
+                voice = self.voices[voiceNum],
+                model = self.model
+            )
+            
+            save(audio, pathToAudio)
+            return pathToAudio

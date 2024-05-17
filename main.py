@@ -24,17 +24,14 @@ if __name__ == '__main__':
     transcriptionHandler = TranscriptionHandler(config)
     transcriptionHandler.init_model()
     
-    segments = transcriptionHandler.transcribe_audio(f'media/{scraped[0]["id"]}_title.wav')
-    
-    producer = Producer(config)
-    producer.make_short(scraped[0]['id'], segments)
-    
-    
-    '''
     speechHandler = SpeechHandler(config, os.getenv('ELEVENLABSTOKEN'))
     speechHandler.init_client()
     
+    producer = Producer(config)
+    
+    
     for post in scraped:
+        
         speechHandler.generate_speech(
             post['title'],
             post['id'] + '_title',
@@ -45,6 +42,12 @@ if __name__ == '__main__':
             post['id'] + '_topcomment',
             1
         )
-    '''
+    
+        titleSegments = transcriptionHandler.transcribe_audio(f'media/{post["id"]}_title.wav')
+        commentSegments = transcriptionHandler.transcribe_audio(f'media/{post["id"]}_topcomment.wav')
+        
+    
+        producer.make_short(post['id'], titleSegments, commentSegments)
+    
         
     
